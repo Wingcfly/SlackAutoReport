@@ -20,8 +20,8 @@
                                             <th>Trạng thái</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
+                                    <tbody id="bodyTableReport">
+                                        @*<tr>
                                             <td>1</td>
                                             <td>20/11/2019</td>
                                             <td>ABCDEF</td>
@@ -32,7 +32,7 @@
                                             <td>20/11/2019</td>
                                             <td>ABCDEF</td>
                                             <td><div class="badge badge-pill badge-info">Chờ báo cáo</div></td>
-                                        </tr>
+                                        </tr>*@
                                     </tbody>
                                 </table>
                             </div>
@@ -63,24 +63,24 @@
                         </div> -->
                         <div class="form-group">
                             <label for="fname" class="control-label col-form-label">1. Công việc hôm qua:</label>
-                            <textarea class="form-control" rows="2" placeholder="Nội dung báo cáo"></textarea>
+                            <textarea class="form-control" rows="2" id="oldTask" placeholder="Công việc hôm qua"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="fname" class="control-label col-form-label">2. Công việc hôm nay:</label>
-                            <textarea class="form-control" rows="2" placeholder="Nội dung báo cáo"></textarea>
+                            <textarea class="form-control" rows="2" id="newTask" placeholder="Công việc hôm nay"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="fname" class="control-label col-form-label">3. Vấn đề:</label>
-                            <textarea class="form-control" rows="2" placeholder="Nội dung báo cáo"></textarea>
+                            <textarea class="form-control" rows="2" id="newProblem" placeholder="Vấn đề"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="fname" class="control-label col-form-label">4. Ngày báo cáo:</label>
-                            <input type="date" class="form-control" id="">
+                            <input type="datetime-local" class="form-control" id="dayReport">
                         </div>
-                        <div class="form-group">
+                        @*<div class="form-group">
                             <label for="fname" class="control-label col-form-label">5. Giờ báo cáo:</label>
-                            <input type="time" class="form-control" id="">
-                        </div>
+                            <input type="time" class="form-control" id="timeReport">
+                        </div>*@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
@@ -92,5 +92,99 @@
     </div>
 </div>
 <script type="text/javascript">
+    var listReport = []
+    document.getElementById('btnThem').addEventListener('click', function () {
+        let oldTask = document.getElementById('oldTask').value
+        let newTask = document.getElementById('newTask').value
+        let newProblem = document.getElementById('newProblem').value
+        let dayReport = document.getElementById('dayReport').value
+        //let timeReport = document.getElementById('timeReport').value
+        let newReport
+        if (newProblem != '') {
+            newReport = {
+                oldTask: oldTask,
+                newTask: newTask,
+                newProblem: newProblem,
+                dayReport: dayReport,
+                //timeReport: timeReport,
+                statusReport: true
+            }
+        } else {
+            newReport = {
+                oldTask: oldTask,
+                newTask: newTask,
+                newProblem: 'Không',
+                dayReport: dayReport,
+                //timeReport: timeReport,
+                statusReport: true
+            }
+        }
+        
+        listReport.push(newReport)
+        console.log(listReport)
+        renderTable()
+    })
+    var bodyTable = document.getElementById('bodyTableReport')
+    function renderTable() {
+        bodyTable.innerHTML = ''
+        for (let index in listReport) {
+            let rowData = document.createElement('tr')
+            let rowNum = document.createElement('td')
+            rowNum.innerHTML = parseInt(index) + 1
+            let dayRe = document.createElement('td')
+            dayRe.innerHTML = listReport[index].dayReport
+            let contentRe = document.createElement('td')
+            contentRe.innerHTML = '- ' + listReport[index].oldTask + '<br>- ' + listReport[index].newTask + '<br>- ' + listReport[index].newProblem
+            let staRe = document.createElement('td')
+            let inStaRe = document.createElement('div')
+            if (listReport[index].statusReport) {
+                inStaRe.setAttribute('class', 'badge badge-pill badge-info')
+                inStaRe.innerHTML = 'Chờ báo cáo'
+            } else {
+                inStaRe.setAttribute('class', 'badge badge-pill badge-success')
+                inStaRe.innerHTML = 'Đã báo cáo'
+            }
+            staRe.appendChild(inStaRe)
 
+            rowData.appendChild(rowNum)
+            rowData.appendChild(dayRe)
+            rowData.appendChild(contentRe)
+            rowData.appendChild(staRe)
+            bodyTable.appendChild(rowData)
+        }
+        sendMessage()
+    }
+    function sendMessage() {
+        for (let index in listReport) {
+            if (listReport[index].statusReport) {
+                let newTime = getTimeRemaining(listReport[index].dayReport).totalSec
+                setTimeout(function () {
+                    let url = "https://hooks.slack.com/services/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";
+                    let formData = {
+                        text: '- Công việc hôm qua: ' + listReport[index].oldTask + '\n- Công việc hôm nay: ' + listReport[index].newTask + '\n- Vấn đề: ' + listReport[index].newProblem
+                    }
+                    $.post(url, JSON.stringify(formData), function (data) {
+                        console.log(data)
+                    });
+                }, newTime * 1000)
+                listReport[index].statusReport = false
+            }
+        }
+    }
+    function getTimeRemaining(endtime) {
+        var t = Date.parse(endtime) - Date.parse(new Date());
+        var seconds = Math.floor((t / 1000) % 60);
+        var minutes = Math.floor((t / 1000 / 60) % 60);
+        var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+        var days = Math.floor(t / (1000 * 60 * 60 * 24));
+        var totalSec = (days * 86400) + (hours * 3600) + (minutes * 60) + seconds;
+        return {
+            //'total': t,
+            //'days': days,
+            //'hours': hours,
+            //'minutes': minutes,
+            //'seconds': seconds,
+            'totalSec': totalSec
+        };
+    }
 </script>
