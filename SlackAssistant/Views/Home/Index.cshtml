@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="card">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <form class="form-horizontal">
+                    <div class="card-body">
+                        <h4 class="card-title">Danh sách báo cáo</h4>
+                        <div class="card">
+                            <div class="table-responsive">
+                                <table id="zero_config p-0" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Thời gian báo cáo</th>
+                                            <th>Nội dung báo cáo</th>
+                                            <th>Trạng thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>20/11/2019</td>
+                                            <td>ABCDEF</td>
+                                            <td><div class="badge badge-pill badge-success">Đã báo cáo</div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>20/11/2019</td>
+                                            <td>ABCDEF</td>
+                                            <td><div class="badge badge-pill badge-info">Chờ báo cáo</div></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="border-top">
+                <div class="card-body text-right">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#Modal2">Thêm</button>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="Modal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm báo cáo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- <div class="form-group">
+                        <label for="fname" class="control-label col-form-label">Tiêu đề báo cáo:</label>
+                        <input type="text" class="form-control" id="fname" placeholder="Tiêu đề báo cáo">
+                        </div> -->
+                        <div class="form-group">
+                            <label for="fname" class="control-label col-form-label">1. Công việc hôm qua:</label>
+                            <textarea class="form-control" rows="2" placeholder="Nội dung báo cáo"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="fname" class="control-label col-form-label">2. Công việc hôm nay:</label>
+                            <textarea class="form-control" rows="2" placeholder="Nội dung báo cáo"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="fname" class="control-label col-form-label">3. Vấn đề:</label>
+                            <textarea class="form-control" rows="2" placeholder="Nội dung báo cáo"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="fname" class="control-label col-form-label">4. Ngày báo cáo:</label>
+                            <input type="date" class="form-control" id="">
+                        </div>
+                        <div class="form-group">
+                            <label for="fname" class="control-label col-form-label">5. Giờ báo cáo:</label>
+                            <input type="time" class="form-control" id="">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="button" id="btnThem" class="btn btn-success">Thêm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+</script>
